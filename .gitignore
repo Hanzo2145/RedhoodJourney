@@ -1,0 +1,30 @@
+# Unreal project
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# IDE/OS
+.vs/
+.idea/
+.vscode/
+*.sln
+*.VC.db
+*.VC.opendb
+*.user
+*.suo
+*.userprefs
+.vsconfig
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Plugin build artifacts
+Plugins/*/Binaries/
+Plugins/*/Intermediate/
+
+# Build products & symbols
+*.exe
+*.pdb
+*.app
+*.dSYM
