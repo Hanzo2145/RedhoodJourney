@@ -26,4 +26,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetCombatTarget(AActor* InCombatTarget);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void AttackTrace();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Attack();
 };

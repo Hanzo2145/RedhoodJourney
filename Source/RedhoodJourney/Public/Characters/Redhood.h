@@ -21,8 +21,16 @@ class REDHOODJOURNEY_API ARedhood : public ABaseCharacter
 	ARedhood();
 	
 public:
+	/*
+	 * ICombat Interface Functions
+	 */
+	virtual void Attack_Implementation() override;
+	/*
+	 * Ends
+	 */
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void HandleDeath(bool IsDead) override;
 
 
 private:

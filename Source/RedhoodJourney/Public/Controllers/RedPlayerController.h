@@ -45,10 +45,17 @@ protected:
 	TObjectPtr<UInputAction> HeavyAttackInput;
 	void HeavyAttack(const FInputActionValue& InputActionValue);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	TObjectPtr<UInputAction> DodgeInput;
+	void Dodge(const FInputActionValue& InputActionValue);
+
 private:
 	/*
 	 * Combat Variables
 	 */
 	bool bAttacking = false;
+
+	//Useful Functions
+	
 	
 };

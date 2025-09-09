@@ -3,6 +3,8 @@
 
 #include "Characters/EnemyBase.h"
 
+#include "PaperZDAnimationComponent.h"
+#include "PaperZDAnimInstance.h"
 #include "AI/RedAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -11,6 +13,11 @@
 void AEnemyBase::SetCombatTarget_Implementation(AActor* InCombatTarget)
 {
 	RedAIController->GetBlackboardComponent()->SetValueAsObject(FName("CombatTarget"), InCombatTarget);
+}
+
+void AEnemyBase::Attack_Implementation()
+{
+	GetPaperZDComponent()->GetAnimInstance()->PlayAnimationOverride(AttackAnimation);
 }
 
 AEnemyBase::AEnemyBase()
@@ -26,6 +33,23 @@ void AEnemyBase::PossessedBy(AController* NewController)
 	RedAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	RedAIController->RunBehaviorTree(BehaviorTree);
 	RedAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), false);
+}
+
+void AEnemyBase::HandleDeath(bool IsDead)
+{
+	EnemyIsDead = true;
+	if (RedAIController)
+	{
+		if (UBlackboardComponent* BB = RedAIController->GetBlackboardComponent())
+		{
+			BB->SetValueAsBool(TEXT("Dead"), true);
+		}
+		RedAIController->ClearFocus(EAIFocusPriority::Gameplay);
+		RedAIController->StopMovement();
+	}
+	GetCharacterMovement()->DisableMovement();
+	GetPaperZDComponent()->GetAnimInstance()->StopAllAnimationOverrides();
+	Super::HandleDeath(IsDead);
 }
 
 void AEnemyBase::BeginPlay()

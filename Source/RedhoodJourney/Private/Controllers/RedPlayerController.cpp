@@ -4,10 +4,14 @@
 #include "Controllers/RedPlayerController.h"
 #include "InputAction.h"
 #include "EnhancedInputSubsystems.h"
+#include "PaperZDAnimationComponent.h"
+#include "PaperZDAnimInstance.h"
+#include "Characters/BaseCharacter.h"
 #include "Controllers/RedEnhancedInputComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 void ARedPlayerController::BeginPlay()
 {
@@ -34,6 +38,7 @@ void ARedPlayerController::SetupInputComponent()
 	RedInput->BindAction(JumpInput, ETriggerEvent::Triggered, this, &ARedPlayerController::Jump);
 	RedInput->BindAction(LightAttackInput, ETriggerEvent::Started, this, &ARedPlayerController::LightAttack);
 	RedInput->BindAction(HeavyAttackInput, ETriggerEvent::Started, this, &ARedPlayerController::HeavyAttack);
+	RedInput->BindAction(DodgeInput, ETriggerEvent::Started, this, &ARedPlayerController::Dodge);
 	
 }
 
@@ -72,10 +77,15 @@ void ARedPlayerController::Jump(const FInputActionValue& InputActionValue)
 
 void ARedPlayerController::LightAttack(const FInputActionValue& InputActionValue)
 {
-	
+	ICombatInterface::Execute_Attack(GetCharacter());
 }
 
 void ARedPlayerController::HeavyAttack(const FInputActionValue& InputActionValue)
+{
+	
+}
+
+void ARedPlayerController::Dodge(const FInputActionValue& InputActionValue)
 {
 	
 }

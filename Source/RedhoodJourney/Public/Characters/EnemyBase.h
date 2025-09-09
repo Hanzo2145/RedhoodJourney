@@ -19,17 +19,22 @@ class REDHOODJOURNEY_API AEnemyBase : public ABaseCharacter
 public:
 	/*ICombatInterface Functions*/
 	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual void Attack_Implementation() override;
 	
 	/*ICombatInterface Functions/*/
 	
 	AEnemyBase();
 	virtual void PossessedBy(AController* NewController) override;
+	virtual void HandleDeath(bool IsDead) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float BaseWalkSpeed = 250.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float LifeSpan = 5.f;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	bool EnemyIsDead = false;
 	
 protected:
 

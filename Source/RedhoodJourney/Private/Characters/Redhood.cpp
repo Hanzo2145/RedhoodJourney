@@ -2,9 +2,13 @@
 
 
 #include "Characters/Redhood.h"
+
+#include "PaperZDAnimationComponent.h"
+#include "PaperZDAnimInstance.h"
 #include "Characters/BaseCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 ARedhood::ARedhood()
@@ -22,6 +26,11 @@ ARedhood::ARedhood()
 	Camera->SetupAttachment(SpringArm);
 }
 
+void ARedhood::Attack_Implementation()
+{
+	GetPaperZDComponent()->GetAnimInstance()->PlayAnimationOverride(AttackAnimation);
+}
+
 void ARedhood::BeginPlay()
 {
 	Super::BeginPlay();
@@ -30,4 +39,11 @@ void ARedhood::BeginPlay()
 void ARedhood::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ARedhood::HandleDeath(bool IsDead)
+{
+	Super::HandleDeath(IsDead);
+	const FString LevelName = UGameplayStatics::GetCurrentLevelName(this);
+	UGameplayStatics::OpenLevel(this, FName(LevelName));
 }
