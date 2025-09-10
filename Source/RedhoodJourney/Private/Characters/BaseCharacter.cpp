@@ -27,11 +27,6 @@ ABaseCharacter::ABaseCharacter()
 	
 }
 
-void ABaseCharacter::SetCombatTarget_Implementation(AActor* CombatTarget)
-{
-	
-}
-
 void ABaseCharacter::AttackTrace_Implementation()
 {
 	FHitResult HitResult;
@@ -44,37 +39,48 @@ void ABaseCharacter::AttackTrace_Implementation()
 		TraceTarget,
 		false,
 		ActorsToIgnore,
-		EDrawDebugTrace::ForDuration,
+		EDrawDebugTrace::None,
 		HitResult,
 		true);
 
 	if (HitResult.bBlockingHit)
 	{
-		const ABaseCharacter* HitActor = Cast<ABaseCharacter>(HitResult.GetActor());
-		if (HitActor)
+		if (const ABaseCharacter* HitActor = Cast<ABaseCharacter>(HitResult.GetActor()))
 		{
-			HitActor->CombatComponent->GetHurt(10.f);
+			HitActor->CombatComponent->GetHit(10.f);
 		}
 	}
-}
-
-void ABaseCharacter::Attack_Implementation()
-{
-	
 }
 
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	CombatComponent->OnDeath.AddDynamic(this, &ABaseCharacter::HandleDeath);
+	PlayerController = Cast<APlayerController>(GetController());
 }
 
 void ABaseCharacter::HandleDeath(bool IsDead)
 {
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	PaperZDAnimation->GetAnimInstance()->PlayAnimationOverride(DeathAnimation);
+	GetPaperZDComponent()->GetAnimInstance()->PlayAnimationOverride(DeathAnimation);
+	GetPaperZDComponent()->GetAnimInstance()->StopAllAnimationOverrides();
 	SetLifeSpan(LifeAfterDeath);
 	OnDeathEventDispatcher.Broadcast(IsDead);
+}
+
+void ABaseCharacter::SetInputEnabled(bool InputEnabled) const
+{
+	if (IsValid(PlayerController))
+	{
+		if (InputEnabled)
+		{
+			PlayerController->EnableInput(PlayerController);
+		}
+		else
+		{
+			PlayerController->DisableInput(PlayerController);
+		}
+	}
 }
 
 

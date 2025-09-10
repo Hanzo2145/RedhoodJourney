@@ -32,24 +32,23 @@ void AEnemyBase::PossessedBy(AController* NewController)
 
 	RedAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	RedAIController->RunBehaviorTree(BehaviorTree);
-	RedAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), false);
+	RedAIController->GetBlackboardComponent()->SetValueAsBool(FName("IsAlive"), true);
 }
 
 void AEnemyBase::HandleDeath(bool IsDead)
 {
+	Super::HandleDeath(IsDead);
 	EnemyIsDead = true;
 	if (RedAIController)
 	{
 		if (UBlackboardComponent* BB = RedAIController->GetBlackboardComponent())
 		{
-			BB->SetValueAsBool(TEXT("Dead"), true);
+			BB->SetValueAsBool(TEXT("IsAlive"), false);
 		}
 		RedAIController->ClearFocus(EAIFocusPriority::Gameplay);
 		RedAIController->StopMovement();
 	}
 	GetCharacterMovement()->DisableMovement();
-	GetPaperZDComponent()->GetAnimInstance()->StopAllAnimationOverrides();
-	Super::HandleDeath(IsDead);
 }
 
 void AEnemyBase::BeginPlay()

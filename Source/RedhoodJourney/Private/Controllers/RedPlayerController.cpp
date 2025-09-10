@@ -4,14 +4,11 @@
 #include "Controllers/RedPlayerController.h"
 #include "InputAction.h"
 #include "EnhancedInputSubsystems.h"
-#include "PaperZDAnimationComponent.h"
-#include "PaperZDAnimInstance.h"
-#include "Characters/BaseCharacter.h"
+#include "Interfaces/CombatInterface.h"
 #include "Controllers/RedEnhancedInputComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
 
 void ARedPlayerController::BeginPlay()
 {
@@ -35,7 +32,7 @@ void ARedPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 	UEnhancedInputComponent* RedInput = CastChecked<UEnhancedInputComponent>(InputComponent);
 	RedInput->BindAction(MoveInput, ETriggerEvent::Triggered, this, &ARedPlayerController::Move);
-	RedInput->BindAction(JumpInput, ETriggerEvent::Triggered, this, &ARedPlayerController::Jump);
+	RedInput->BindAction(JumpInput, ETriggerEvent::Started, this, &ARedPlayerController::Jump);
 	RedInput->BindAction(LightAttackInput, ETriggerEvent::Started, this, &ARedPlayerController::LightAttack);
 	RedInput->BindAction(HeavyAttackInput, ETriggerEvent::Started, this, &ARedPlayerController::HeavyAttack);
 	RedInput->BindAction(DodgeInput, ETriggerEvent::Started, this, &ARedPlayerController::Dodge);
@@ -44,7 +41,7 @@ void ARedPlayerController::SetupInputComponent()
 
 void ARedPlayerController::Move(const FInputActionValue& InputActionValue)
 {
-	if (bAttacking == false)
+	if (!ICombatInterface::Execute_GetIsAttacking(GetCharacter()))
  	{
 		const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 
@@ -69,7 +66,7 @@ void ARedPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void ARedPlayerController::Jump(const FInputActionValue& InputActionValue)
 {
-	if (bAttacking == false)
+	if (!ICombatInterface::Execute_GetIsAttacking(GetCharacter()))
 	{
 		GetCharacter()->Jump();
 	}
@@ -77,12 +74,12 @@ void ARedPlayerController::Jump(const FInputActionValue& InputActionValue)
 
 void ARedPlayerController::LightAttack(const FInputActionValue& InputActionValue)
 {
-	ICombatInterface::Execute_Attack(GetCharacter());
+	ICombatInterface::Execute_LightAttack(GetCharacter());
 }
 
 void ARedPlayerController::HeavyAttack(const FInputActionValue& InputActionValue)
 {
-	
+	ICombatInterface::Execute_HeavyAttack(GetCharacter());
 }
 
 void ARedPlayerController::Dodge(const FInputActionValue& InputActionValue)

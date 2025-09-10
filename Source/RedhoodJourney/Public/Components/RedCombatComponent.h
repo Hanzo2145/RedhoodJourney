@@ -7,6 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "RedCombatComponent.generated.h"
 
+struct FAttack;
 class UPaperZDAnimSequence;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, bool, Isdead);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnValueChangedSignature, float, NewValue);
@@ -48,10 +49,12 @@ public:
 	/*
 	 * Functions
 	 */
-	void GetHurt(float InDamage);
+	void GetHit(float InDamage);
 	void Heal(float InHeal);
 	void AdjustStamina(float InStamina/*To Subtract add negative value*/);
 	void AdjustMana(float InMana /*To Subtract add negative value*/);
+	bool DoWeHaveStamina(TArray<FAttack> AtttackAnimData, int32 InAttackCount);
+	float GetAttackCost(TArray<FAttack> AtttackAnimData, int32 InAttackCount);
 	
 	FOnDeathSignature OnDeath;
 
@@ -111,13 +114,20 @@ private:
 	float MaxStamina;
 
 	UPROPERTY()
-	float MaxHealthMuli = 1.5;
+	float MaxHealthMuli = 1.5f;
 	
 	UPROPERTY()
-	float MaxManaMuli = 1.2;
+	float MaxManaMuli = 1.2f;
 
 	UPROPERTY()
-	float MaxStaminaMuli = 1.5;
+	float MaxStaminaMuli = 1.5f;
+
+	UPROPERTY()
+	float DamageMuli = 2.5f;
+
+	UPROPERTY()
+	float AgilityMuli = 3.f;
+	
 	
 
 

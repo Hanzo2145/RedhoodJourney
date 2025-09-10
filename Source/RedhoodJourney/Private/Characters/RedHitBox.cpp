@@ -8,8 +8,11 @@
 
 void URedHitBox::OnReceiveNotify_Implementation(UPaperZDAnimInstance* OwningInstance) const
 {
-	if (OwningInstance->GetOwningActor()->Implements<UCombatInterface>())
+	if (OwningInstance)
 	{
-		ICombatInterface::Execute_AttackTrace(OwningInstance->GetOwningActor());
+		if (OwningInstance->GetOwningActor()->Implements<UCombatInterface>())
+		{
+			ICombatInterface::Execute_AttackTrace(OwningInstance->GetOwningActor());
+		}
 	}
 }

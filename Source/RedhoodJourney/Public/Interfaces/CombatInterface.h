@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "AttackTypes.h"
 #include "CombatInterface.generated.h"
+
+class UPaperZDAnimSequence;
 
 class ABaseCharacter;
 // This class does not need to be modified.
@@ -32,4 +35,25 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void Attack();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool GetIsAttacking();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ResetLightAttacking();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ResetHeavyAttacking();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void LightAttack();
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void HeavyAttack();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetAttackWindow(bool Open);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ResetCombatVariables();
 };

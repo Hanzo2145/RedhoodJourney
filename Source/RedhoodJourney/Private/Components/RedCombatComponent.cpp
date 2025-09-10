@@ -6,6 +6,7 @@
 #include "PaperZDAnimationComponent.h"
 #include "PaperZDAnimInstance.h"
 #include "Characters/BaseCharacter.h"
+#include "Characters/Redhood.h"
 
 // Sets default values for this component's properties
 URedCombatComponent::URedCombatComponent()
@@ -28,7 +29,7 @@ void URedCombatComponent::BeginPlay()
 	SetVitalAttributes();
 }
 
-void URedCombatComponent::GetHurt(float InDamage)
+void URedCombatComponent::GetHit(float InDamage)
 {
 	Health = FMath::Clamp(Health - InDamage, 0, MaxHealth);
 	OnHealthChanged.Broadcast(Health);
@@ -36,6 +37,7 @@ void URedCombatComponent::GetHurt(float InDamage)
 	{
 		IsDead = true;
 		OnDeath.Broadcast(IsDead);
+		return;
 	}
 	ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(GetOwner());
 	if (BaseCharacter)
@@ -60,6 +62,22 @@ void URedCombatComponent::AdjustMana(float InMana)
 {
 	Mana = FMath::Clamp(Mana - InMana, 0, MaxMana);
 	OnManaChanged.Broadcast(Mana);
+}
+
+bool URedCombatComponent::DoWeHaveStamina(TArray<FAttack> AtttackAnimData, int32 InAttackCount)
+{
+	const float AttackCost = GetAttackCost(AtttackAnimData, InAttackCount);
+	const bool ReturnValue = Stamina >= AttackCost;
+	return ReturnValue;
+}
+
+float URedCombatComponent::GetAttackCost(TArray<FAttack> AtttackAnimData, int32 InAttackCount)
+{
+	const float StaminaCost = AtttackAnimData[InAttackCount].StaminaCost;
+	const float StrengthValue = Strength.Value * DamageMuli;
+	const float AgilityValue = Agility.Value * AgilityMuli;
+	const float SimiFinalValue = StaminaCost + StrengthValue;
+	return SimiFinalValue - AgilityValue;
 }
 
 void URedCombatComponent::SetVitalAttributes()

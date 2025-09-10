@@ -1,4 +1,4 @@
-// Copyright belong to Anas (Hanzo) Hatachi
+/*Copyright belong to Anas (Hanzo) Hatachi*/
 
 #pragma once
 
@@ -26,9 +26,7 @@ public:
 	ABaseCharacter();
 
 	/*ICombatInterface Functions*/
-	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 	virtual void AttackTrace_Implementation() override;
-	virtual void Attack_Implementation() override;
 	/*ICombatInterface Functions/*/
 
 	/*
@@ -38,6 +36,7 @@ public:
 	
 	UFUNCTION()
 	virtual void HandleDeath(bool IsDead);
+	void SetInputEnabled(bool InputEnabled) const;
 
 	/*
 	 * DELEGATES
@@ -49,8 +48,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Combat")
 	TObjectPtr<UPaperZDAnimSequence> AttackAnimation;
 
+	UPROPERTY(EditDefaultsOnly, Category="Combat")
+	float Damage;
+
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY()
+	APlayerController* PlayerController;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UPaperZDAnimationComponent> PaperZDAnimation;
