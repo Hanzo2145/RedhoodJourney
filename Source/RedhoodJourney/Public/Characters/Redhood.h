@@ -32,6 +32,8 @@ public:
 	virtual void ResetHeavyAttacking_Implementation() override;
 	virtual void LightAttack_Implementation() override;
 	virtual void HeavyAttack_Implementation() override;
+	virtual void SetIsLightAttack_Implementation(bool InLightAttack) override;
+	virtual bool GetIsLightAttacking_Implementation() override;
 	/*
 	 * Ends
 	 */
@@ -64,7 +66,7 @@ private:
 	bool bComboActivated = false;
 	bool bAttacking = false;
 	int32 AttackCount = 0;
-	//int32 HeavyAttackCount = 0;
+	bool bIsLightAttacking = false;
 	
 	void PlayFirstAttack(const TArray<FAttack> AttackAnimData);
 	void PlayComboAttack(const TArray<FAttack> AttackAnimationData, int32 InAttackCount);

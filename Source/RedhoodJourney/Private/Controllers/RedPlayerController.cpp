@@ -74,11 +74,13 @@ void ARedPlayerController::Jump(const FInputActionValue& InputActionValue)
 
 void ARedPlayerController::LightAttack(const FInputActionValue& InputActionValue)
 {
+	ICombatInterface::Execute_SetIsLightAttack(GetCharacter(), true);
 	ICombatInterface::Execute_LightAttack(GetCharacter());
 }
 
 void ARedPlayerController::HeavyAttack(const FInputActionValue& InputActionValue)
 {
+	ICombatInterface::Execute_SetIsLightAttack(GetCharacter(), false);
 	ICombatInterface::Execute_HeavyAttack(GetCharacter());
 }
 

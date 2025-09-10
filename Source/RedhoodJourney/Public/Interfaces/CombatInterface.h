@@ -56,4 +56,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void ResetCombatVariables();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetIsLightAttack(bool InLightAttack);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool GetIsLightAttacking();
 };

@@ -41,7 +41,6 @@ void ARedhood::ResetCombatVariables_Implementation()
 	bAttacking = false;
 	bAttackWindow = false;
 	bComboActivated = false;
-	//HeavyAttackCount = 0;
 	AttackCount = 0;
 }
 
@@ -63,6 +62,16 @@ void ARedhood::LightAttack_Implementation()
 void ARedhood::HeavyAttack_Implementation()
 {
 	RedhoodAttack(HeavyAttacks);
+}
+
+void ARedhood::SetIsLightAttack_Implementation(bool InLightAttack)
+{
+	bIsLightAttacking = InLightAttack;
+}
+
+bool ARedhood::GetIsLightAttacking_Implementation()
+{
+	return bIsLightAttacking;
 }
 
 void ARedhood::BeginPlay()
@@ -103,7 +112,6 @@ void ARedhood::HandleAttackReset(TArray<FAttack> AttackInfo, int32 InAttackCount
 		const bool IsAttackCountHigher = AttackCount > AttackAnimDataLength;
 		if (IsAttackCountHigher)
 		{
-			
 			AttackCount = 0;
 			bAttacking = false;
 			bComboActivated = false;
@@ -117,16 +125,13 @@ void ARedhood::HandleAttackReset(TArray<FAttack> AttackInfo, int32 InAttackCount
 	else
 	{
 		bAttacking = false;
-		
 		AttackCount = 0;
-		Execute_ResetCombatVariables(this);
 	}
 }
 
 void ARedhood::IncrementAttackCount()
 {
 	AttackCount ++;
-	UE_LOG(LogTemp, Warning, TEXT("AttackCount is now: %d"), AttackCount);
 }
 
 void ARedhood::PlayFirstAttack(const TArray<FAttack> AttackAnimData)
