@@ -47,7 +47,7 @@ void ABaseCharacter::AttackTrace_Implementation()
 	{
 		if (const ABaseCharacter* HitActor = Cast<ABaseCharacter>(HitResult.GetActor()))
 		{
-			HitActor->CombatComponent->GetHit(10.f);
+			HitActor->CombatComponent->GetHit(CombatComponent->GetFinalAttackDamage(Damage));
 		}
 	}
 }
@@ -59,20 +59,11 @@ void ABaseCharacter::BeginPlay()
 	PlayerController = Cast<APlayerController>(GetController());
 }
 
-void ABaseCharacter::HandleDeath(bool IsDead)
-{
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	GetPaperZDComponent()->GetAnimInstance()->PlayAnimationOverride(DeathAnimation);
-	GetPaperZDComponent()->GetAnimInstance()->StopAllAnimationOverrides();
-	SetLifeSpan(LifeAfterDeath);
-	OnDeathEventDispatcher.Broadcast(IsDead);
-}
-
-void ABaseCharacter::SetInputEnabled(bool InputEnabled) const
+void ABaseCharacter::SetInoutEnabled_Implementation(const bool IsEnabled)
 {
 	if (IsValid(PlayerController))
 	{
-		if (InputEnabled)
+		if (IsEnabled == true)
 		{
 			PlayerController->EnableInput(PlayerController);
 		}
@@ -81,6 +72,15 @@ void ABaseCharacter::SetInputEnabled(bool InputEnabled) const
 			PlayerController->DisableInput(PlayerController);
 		}
 	}
+}
+
+void ABaseCharacter::HandleDeath(bool IsDead)
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ICombatInterface::Execute_GetPaperZdAnimationComponent(this)->GetAnimInstance()->PlayAnimationOverride(DeathAnimation);
+	ICombatInterface::Execute_GetPaperZdAnimationComponent(this)->GetAnimInstance()->StopAllAnimationOverrides();
+	SetLifeSpan(LifeAfterDeath);
+	OnDeathEventDispatcher.Broadcast(IsDead);
 }
 
 

@@ -6,8 +6,10 @@
 #include "PaperZDAnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/RedCombatComponent.h"
+#include "Controllers/RedPlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/HUD/RedHUD.h"
 
 
 ARedhood::ARedhood()
@@ -25,6 +27,23 @@ ARedhood::ARedhood()
 	Camera->SetupAttachment(SpringArm);
 }
 
+void ARedhood::BeginPlay()
+{
+	Super::BeginPlay();
+	if (ARedPlayerController* RedPlayerController = Cast<ARedPlayerController>(GetController()))
+	{
+		if (ARedHUD* RedHUD = Cast<ARedHUD>(RedPlayerController->GetHUD()))
+		{
+			RedHUD->InitOverlay(RedPlayerController,CombatComponent);
+		}
+	}
+}
+
+void ARedhood::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
 bool ARedhood::GetIsAttacking_Implementation()
 {
 	return bAttacking;
@@ -37,7 +56,7 @@ void ARedhood::SetAttackWindow_Implementation(bool Open)
 
 void ARedhood::ResetCombatVariables_Implementation()
 {
-	SetInputEnabled(true);
+	SetInoutEnabled(true);
 	bAttacking = false;
 	bAttackWindow = false;
 	bComboActivated = false;
@@ -72,16 +91,6 @@ void ARedhood::SetIsLightAttack_Implementation(bool InLightAttack)
 bool ARedhood::GetIsLightAttacking_Implementation()
 {
 	return bIsLightAttacking;
-}
-
-void ARedhood::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void ARedhood::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void ARedhood::HandleDeath(bool IsDead)
@@ -145,12 +154,12 @@ void ARedhood::PlayFirstAttack(const TArray<FAttack> AttackAnimData)
 
 void ARedhood::PlayComboAttack(const TArray<FAttack> AttackAnimationData, int32 InAttackCount)
 {
-	bool DoesHaveStamina = CombatComponent->DoWeHaveStamina(AttackAnimationData, InAttackCount);
-	FAttack Data = AttackAnimationData[AttackCount];
+	const bool DoesHaveStamina = CombatComponent->DoWeHaveStamina(AttackAnimationData, InAttackCount);
+	const FAttack Data = AttackAnimationData[AttackCount];
 	if (DoesHaveStamina)
 	{
 		Damage = Data.AttackDamage;
-		GetPaperZDComponent()->GetAnimInstance()->PlayAnimationOverride(Data.AttackAnimation);
+		ICombatInterface::Execute_GetPaperZdAnimationComponent(this)->GetAnimInstance()->PlayAnimationOverride(Data.AttackAnimation);
 		TraceHalfSize = Data.BoxTraceExtent;
 		TraceStart->SetRelativeLocation(Data.BoxTraceStart);
 		TraceEnd->SetRelativeLocation(Data.BoxTraceEnd);

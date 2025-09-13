@@ -7,10 +7,12 @@
 #include "Components/ActorComponent.h"
 #include "RedCombatComponent.generated.h"
 
+class UDamageNumber;
+class ICombatInterface;
 struct FAttack;
 class UPaperZDAnimSequence;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, bool, Isdead);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnValueChangedSignature, float, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributesChangedSignature, float, NewValue);
 
 UENUM(BlueprintType)
 enum EAttributes
@@ -53,19 +55,25 @@ public:
 	void Heal(float InHeal);
 	void AdjustStamina(float InStamina/*To Subtract add negative value*/);
 	void AdjustMana(float InMana /*To Subtract add negative value*/);
-	bool DoWeHaveStamina(TArray<FAttack> AtttackAnimData, int32 InAttackCount);
-	float GetAttackCost(TArray<FAttack> AtttackAnimData, int32 InAttackCount);
-	
+	bool DoWeHaveStamina(TArray<FAttack> AttackAnimData, int32 InAttackCount) const;
+	float GetAttackCost(TArray<FAttack> AttackAnimData, int32 InAttackCount) const;
+	float GetFinalAttackDamage(float InDamage) const;
+	float GetFinalArmor() const;
+	float GetHealth() const { return Health; }
+	float GetMaxHealth() const { return MaxHealth; }
+	float GetMana() const { return Mana; }
+	float GetMaxMana() const { return MaxMana; }
+	float GetStamina() const { return Stamina; }
+	float GetMaxStamina() const { return MaxStamina; }
+
 	FOnDeathSignature OnDeath;
-
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnValueChangedSignature OnHealthChanged;
-
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnValueChangedSignature OnManaChanged;
-
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnValueChangedSignature OnStaminaChanged;
+	FOnAttributesChangedSignature OnHealthChanged;
+	FOnAttributesChangedSignature OnManaChanged;
+	FOnAttributesChangedSignature OnStaminaChanged;
+	FOnAttributesChangedSignature OnMaxHealthChanged;
+	FOnAttributesChangedSignature OnMaxManaChanged;
+	FOnAttributesChangedSignature OnMaxStaminaChanged;
+	
 
 protected:
 	// Called when the game starts
@@ -79,7 +87,14 @@ protected:
 	 */
 	UPROPERTY(BlueprintReadOnly, Category="Combat")
 	bool IsDead = false;
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Widget | Text")
+	FSlateColor TextDamageColor;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Widget | Text")
+	TSubclassOf<UDamageNumber> DamageNumberClass;
+
+	void CreateDamageNumber(float DamageNumber, const FVector& Location) const;
 
 private:
 
@@ -113,6 +128,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Attributes")
 	float MaxStamina;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Attributes")
+	float Armor = 5.f;
+
 	UPROPERTY()
 	float MaxHealthMuli = 1.5f;
 	
@@ -128,8 +146,8 @@ private:
 	UPROPERTY()
 	float AgilityMuli = 3.f;
 	
-	
-
+	UPROPERTY()
+	float ArmorMuli = 0.8f;
 
 	/*
 	 * FunctionsDeclarations
@@ -144,6 +162,4 @@ private:
 
 	UFUNCTION(BlueprintPure, Category = "StateSetters")
 	float GetFinalMaxStamina();
-
-	
 };

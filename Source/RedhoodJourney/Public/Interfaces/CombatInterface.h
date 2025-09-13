@@ -7,6 +7,7 @@
 #include "AttackTypes.h"
 #include "CombatInterface.generated.h"
 
+class UPaperZDAnimationComponent;
 class UPaperZDAnimSequence;
 
 class ABaseCharacter;
@@ -62,4 +63,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool GetIsLightAttacking();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UPaperZDAnimationComponent* GetPaperZdAnimationComponent();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetInoutEnabled(const bool IsEnabled);
 };

@@ -8,7 +8,17 @@
 #include "AI/RedAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "UI/WidgetController/RedUserWidget.h"
+
+
+AEnemyBase::AEnemyBase()
+{
+	HealthBar =CreateDefaultSubobject<UWidgetComponent>("HealthBarWidget");
+	HealthBar->SetupAttachment(GetRootComponent());
+}
 
 void AEnemyBase::SetCombatTarget_Implementation(AActor* InCombatTarget)
 {
@@ -17,12 +27,7 @@ void AEnemyBase::SetCombatTarget_Implementation(AActor* InCombatTarget)
 
 void AEnemyBase::Attack_Implementation()
 {
-	GetPaperZDComponent()->GetAnimInstance()->PlayAnimationOverride(AttackAnimation);
-}
-
-AEnemyBase::AEnemyBase()
-{
-	
+	ICombatInterface::Execute_GetPaperZdAnimationComponent(this)->GetAnimInstance()->PlayAnimationOverride(AttackAnimation);
 }
 
 void AEnemyBase::PossessedBy(AController* NewController)
@@ -55,4 +60,8 @@ void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+	if (URedUserWidget* RedUserWidget = Cast<URedUserWidget>(HealthBar->GetUserWidgetObject()))
+	{
+		RedUserWidget->SetWidgetController(this);
+	}
 }

@@ -6,6 +6,8 @@
 #include "Characters/BaseCharacter.h"
 #include "EnemyBase.generated.h"
 
+class UWidgetComponent;
+class URedUserWidget;
 class UBehaviorTree;
 class ARedAIController;
 class UBlackboardComponent;
@@ -51,6 +53,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<ARedAIController> RedAIController;
-	
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
+	TObjectPtr<UWidgetComponent> HealthBar;
 };

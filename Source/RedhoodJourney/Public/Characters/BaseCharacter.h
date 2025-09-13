@@ -27,16 +27,16 @@ public:
 
 	/*ICombatInterface Functions*/
 	virtual void AttackTrace_Implementation() override;
+	virtual UPaperZDAnimationComponent* GetPaperZdAnimationComponent_Implementation() override {return PaperZDAnimation;}
+	virtual void SetInoutEnabled_Implementation(const bool IsEnabled) override;
 	/*ICombatInterface Functions/*/
 
 	/*
 	 * Functions
 	 */
-	FORCEINLINE UPaperZDAnimationComponent* GetPaperZDComponent() { return PaperZDAnimation; }
 	
 	UFUNCTION()
 	virtual void HandleDeath(bool IsDead);
-	void SetInputEnabled(bool InputEnabled) const;
 
 	/*
 	 * DELEGATES

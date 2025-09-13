@@ -13,7 +13,9 @@
 				"Engine",
 				"EnhancedInput",
 				"AIModule",
-				"PaperZD"
+				"PaperZD",
+				"UMG",
+				"CoreUObject"
 			]
 		}
 	],

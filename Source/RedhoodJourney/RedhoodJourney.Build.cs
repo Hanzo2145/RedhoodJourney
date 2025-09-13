@@ -8,7 +8,7 @@ public class RedhoodJourney : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Niagara", "PaperZD", "AIModule", "PaperZD", "Paper2D" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Niagara", "PaperZD", "AIModule", "PaperZD", "Paper2D", "SlateCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 
